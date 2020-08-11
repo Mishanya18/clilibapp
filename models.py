@@ -19,7 +19,7 @@ class Manager(models.Model):
 class Client(models.Model):
     """Модель клиента"""
     title = models.CharField("Название компании", max_length=150)
-    contract_number = models.PositiveIntegerField("Номер контракта", null=True, default=0)
+    contract_number = models.CharField("Номер контракта", max_length=100, null=True, default=0)
     test = models.BooleanField("Тестовый режим", default=True)
     stuff = models.BooleanField("Клиент для внутренних нужд", default=False)
     orgname = models.CharField("Название организации в vCloud", max_length=50, default='OrgName')

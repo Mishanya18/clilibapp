@@ -1,5 +1,5 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from .import views
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import RedirectView
@@ -9,6 +9,7 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path('', RedirectView.as_view(url='login'), name='start_url'),
     path("login/", LoginView.as_view(template_name='accounts/login.html', redirect_authenticated_user=True), name='login_url'),
+    path("logout/", LogoutView.as_view(), name='logout_url'),
     path("clients/", login_required(views.ClientView.as_view()), name='clients_url'),
     path("clients/create", login_required(views.ClientCreateOrgView.as_view()), name='clients_create_url'),
     path("client/<int:pk>/spokesmans", login_required(views.ClientCreateSpokesmanView.as_view()), name='clients_create_spokesmans_url'),
