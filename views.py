@@ -7,14 +7,23 @@ from .utils import *
 # Create your views here.
 
 
-class ClientView(View):
+class ClientViewAll(View):
     """Список клиентов"""
+    template = "clilib/clients/clients_grid.html"
+    logik_filter = ""
     def get(self, request):
-        clients = Client.objects.all()
+        if self.logik_filter=="test":
+            clients = Client.objects.filter(test=True)
+        elif self.logik_filter=="all":
+            clients = Client.objects.all()
+        elif self.logik_filter=="staff":
+            clients = Client.objects.filter(stuff=True)
+        else:
+            clients = Client.objects.all()
         companies={}
         for client in clients:
             companies[client]=Spokesman.objects.filter(client = client)
-        return render(request, "clilib/clients/clients_list.html", {"clients_list": clients, "companies": companies})
+        return render(request, self.template, {"clients_list": clients, "companies": companies})
 
 class ClientDetailView(View):
     """Список клиентов"""

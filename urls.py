@@ -1,5 +1,5 @@
-from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import path, reverse_lazy
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from .import views
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import RedirectView
@@ -10,7 +10,17 @@ urlpatterns = [
     path('', RedirectView.as_view(url='login'), name='start_url'),
     path("login/", LoginView.as_view(template_name='accounts/login.html', redirect_authenticated_user=True), name='login_url'),
     path("logout/", LogoutView.as_view(), name='logout_url'),
-    path("clients/", login_required(views.ClientView.as_view()), name='clients_url'),
+    path("chg_passwd/", PasswordChangeView.as_view(template_name='accounts/chg_passwd.html', success_url=reverse_lazy('clients_url')), name='chg_passwd_url'),
+
+
+    path("clients/all", login_required(views.ClientViewAll.as_view()), name='clients_url'),
+    path("clients/test", login_required(views.ClientViewAll.as_view(logik_filter="test")), name='clients_test_url'),
+    path("clients/staff", login_required(views.ClientViewAll.as_view(logik_filter="staff")), name='clients_staff_url'),
+
+    path("clients_list/all", login_required(views.ClientViewAll.as_view(template = "clilib/clients/clients_list.html")), name='clients_list_url'),
+    path("clients_list/test", login_required(views.ClientViewAll.as_view(template = "clilib/clients/clients_list.html", logik_filter="test")), name='clients_list_test_url'),
+    path("clients_list/staff", login_required(views.ClientViewAll.as_view(template = "clilib/clients/clients_list.html", logik_filter="staff")), name='clients_list_staff_url'),
+
     path("clients/create", login_required(views.ClientCreateOrgView.as_view()), name='clients_create_url'),
     path("client/<int:pk>/spokesmans", login_required(views.ClientCreateSpokesmanView.as_view()), name='clients_create_spokesmans_url'),
     path("client/<int:pk>/services/create", login_required(views.ClientCreateServiceView.as_view()), name='clients_create_services_url'),
