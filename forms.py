@@ -16,11 +16,12 @@ class ManagerForm(forms.ModelForm):
 class ServTypeForm(forms.ModelForm):
     class Meta:
         model = ServType
-        fields = ['title', 'unit_of_measure']
+        fields = ['title', 'unit_of_measure', 'short_name']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'id': 'inputTitle', 'type': 'text'}),
             'unit_of_measure': forms.TextInput(attrs={'class': 'form-control', 'id': 'inputUnit_of_measure', 'type': 'text'}),
+            'short_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'inputShort_name', 'type': 'text'}),
         }
 
 class ServiceForm(forms.ModelForm):

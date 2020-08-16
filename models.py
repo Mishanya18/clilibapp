@@ -65,10 +65,11 @@ class Spokesman(models.Model):
 
 class ServType(models.Model):
     title = models.CharField("Название типа услуги", max_length=150)
+    short_name = models.CharField("Краткое название типа услуги", max_length=50)
     unit_of_measure = models.CharField("Единица измерения", max_length = 50)
 
     def __str__(self):
-        return self.title
+        return self.short_name
 
     class Meta:
         verbose_name = "Тип услуги"
@@ -86,7 +87,7 @@ class Service(models.Model):
     )
 
     def __str__(self):
-        return self.type.title
+        return self.type.short_name
 
     class Meta:
         verbose_name = "Услуга"
