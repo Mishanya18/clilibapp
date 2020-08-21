@@ -39,7 +39,7 @@ class Client(models.Model):
         return reverse('clients_create_spokesmans_url', kwargs={'pk': self.pk })
 
     def get_service_add_url(self):
-        return reverse('clients_create_services_url', kwargs={'pk': self.pk })
+        return reverse('clients_add_services_url', kwargs={'pk': self.pk })
 
     class Meta:
         verbose_name = "Клиент"

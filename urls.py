@@ -23,10 +23,7 @@ urlpatterns = [
 
     path("clients/create", login_required(views.ClientCreateOrgView.as_view()), name='clients_create_url'),
     path("client/<int:pk>/spokesmans", login_required(views.ClientCreateSpokesmanView.as_view()), name='clients_create_spokesmans_url'),
-    path("client/<int:pk>/services/create", login_required(views.ClientCreateServiceView.as_view()), name='clients_create_services_url'),
     path("client/<int:pk>/services/add", login_required(views.ClientAddServiceView.as_view()), name='clients_add_services_url'),
-    path("client/<int:pk>/services/<int:sk>/update", login_required(views.ClientUpdateServiceView.as_view()), name='clients_update_services_url'),
-    path("client/<int:pk>/services/<int:sk>/delete", login_required(views.ClientDeleteServiceView.as_view()), name='clients_delete_services_url'),
     path("client/<int:pk>/delete", login_required(views.ClientDeleteOrgView.as_view()), name='clients_delete_url'),
     path("client/<int:pk>/update", login_required(views.ClientUpdateOrgView.as_view()), name='clients_update_url'),
     path("client/<int:pk>/", login_required(views.ClientDetailView.as_view()), name='client_detail_url'),

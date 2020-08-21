@@ -1,5 +1,6 @@
 from django import forms
 from .models import Manager, ServType, Spokesman, Client, Service
+from django.forms import inlineformset_factory
 
 class ManagerForm(forms.ModelForm):
     class Meta:
@@ -62,3 +63,5 @@ class ClientForm(forms.ModelForm):
             'manager': forms.Select(attrs={'class': 'form-control', 'id': 'inputManager'}),
             'orgname': forms.TextInput(attrs={'class': 'form-control', 'id': 'inputOrgname'})
         }
+
+ServiceFormFormSet = inlineformset_factory(Client, Service, form=ServiceForm, fk_name='client', extra=1)

@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django import forms
+from django.forms import formset_factory
 from django.views.generic.base import View
 from .models import Client, Spokesman, Service, Manager, ServType
-from .forms import ManagerForm, ServTypeForm, SpokesmanForm, ClientForm, ServiceForm
+from .forms import ManagerForm, ServTypeForm, SpokesmanForm, ClientForm, ServiceForm, ServiceFormFormSet
 from .utils import *
 # Create your views here.
 
@@ -75,74 +76,22 @@ class ClientCreateSpokesmanView(View):
         if bound_form.is_valid():
             new_obj = bound_form.save()
             return redirect(client.get_service_add_url())
-        #return render(request, "clilib/clients/clients_spokesmans_create.html", {"form": bound_form})
         return redirect('clients_create_spokesmans_url', pk = pk)
-
-class ClientCreateServiceView(View):
-    """Создание новых услуг"""
-    def get(self, request, pk):
-        form = ServiceForm()
-        form.fields['client'] = forms.ModelChoiceField(queryset = Client.objects.filter(id=pk), empty_label = None)
-        form.fields['client'].widget.attrs.update({'class': 'form-control', 'id': 'inputClient'})
-
-        client = Client.objects.get(id=pk)
-        return render(request, "clilib/clients/clients_services_create.html", {"form": form, "client": client})
-
-    def post(self, request, pk):
-        bound_form = ServiceForm(request.POST)
-
-        if bound_form.is_valid():
-            new_obj = bound_form.save()
-            return redirect('clients_url')
-        return render(request, "clilib/clients/clients_services_create.html", {"form": bound_form})
 
 class ClientAddServiceView(View):
     """Изменение услуг"""
     def get(self, request, pk):
-        form = ServiceForm()
-        form.fields['client'] = forms.ModelChoiceField(queryset = Client.objects.filter(id=pk), empty_label = None)
-        form.fields['client'].widget.attrs.update({'class': 'form-control', 'id': 'inputClient'})
         client = Client.objects.get(id=pk)
-        return render(request, "clilib/clients/clients_services_add.html", {"form": form, "client": client})
+        form = ServiceFormFormSet(instance=client)
+        return render(request, "clilib/clients/clients_services_add.html", {"serviceformset": form, "client": client})
 
     def post(self, request, pk):
-
-        bound_form = ServiceForm(request.POST)
-        bound_form.fields['offered'].value = True
+        client = Client.objects.get(id=pk)
+        bound_form = ServiceFormFormSet(request.POST, instance=client)
         if bound_form.is_valid():
             new_obj = bound_form.save()
             return redirect('client_detail_url', pk = pk)
-        return render(request, "clilib/clients/clients_services_add.html", {"form": bound_form})
-
-class ClientUpdateServiceView(View):
-        """Изменение услуги у клиента"""
-        def get(self, request, pk, sk):
-            obj = get_object_or_404(Service, client=pk, id=sk)
-            bound_form = ServiceForm(instance=obj)
-            bound_form.fields['client'] = forms.ModelChoiceField(queryset = Client.objects.filter(id=pk), empty_label = None)
-            bound_form.fields['client'].widget.attrs.update({'class': 'form-control', 'id': 'inputClient'})
-            client = Client.objects.get(id=pk)
-            return render(request, "clilib/clients/clients_services_update.html", {"form": bound_form, "service": obj, "client": client})
-
-        def post(self, request, pk, sk):
-            obj = get_object_or_404(Service, client=pk, id=sk)
-            bound_form = ServiceForm(request.POST, instance=obj)
-            if bound_form.is_valid():
-                new_obj = bound_form.save()
-                return redirect('client_detail_url', pk = pk)
-            return render(request, "clilib/clients/clients_services_update.html", {"form": bound_form})
-
-class ClientDeleteServiceView(ObjectDeleteMixin, View):
-    """Удаление услуги у клиента"""
-    def get(self, request, pk, sk):
-        obj = get_object_or_404(Service, client=pk, id=sk)
-        client = Client.objects.get(id=pk)
-        return render(request, "clilib/clients/clients_services_delete.html", {"service": obj, "client": client})
-
-    def post(self, request, pk, sk):
-        obj = get_object_or_404(Service, client=pk, id=sk)
-        obj.delete()
-        return redirect('client_detail_url', pk = pk)
+        return render(request, "clilib/clients/clients_services_add.html", {"serviceformset": bound_form, "client": client})
 
 class SpokesmanView(View):
     """Список представителей"""
